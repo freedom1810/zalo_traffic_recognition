@@ -1,0 +1,32 @@
+# Mode
+debug : True
+device : 'cuda:0'
+
+# Dataset
+path : '/home/asilla/sonnh/ben/images/' # forder alll image    # phải có / ở cuối 
+train_path : 'fold/train_fold_0.csv' # file csv
+valid_path : 'fold/test_fold_0.csv'   # file csv
+batch_size : 24
+num_workers : 8
+output_path : 'output/'  # phải có / ở cuối 
+max_epoch : 20
+
+# Checkpoint
+continue_train : false
+checkpoint_path : 'output-freeze/model_10.pth.tar' # tiếp tục train thì nhớ thêm vào
+
+
+# Optimizer
+lr : 0.001
+
+# Transform
+image_size : [137, 236] # nếu train với size gốc phải để crop = False
+
+crop : False
+padding : 16
+
+use_cutout : false
+cutmix_ratio : 0
+cutmix_bien : 0.5
+
+auto_aug : False
