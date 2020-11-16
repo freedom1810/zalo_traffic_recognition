@@ -2,6 +2,8 @@ import os
 import yaml
 import argparse
 
+# from model.Processor import Processor
+
 from model.Processor import Processor
 
 def main():
@@ -10,14 +12,14 @@ def main():
     # Update parameters by yaml
     args = parser.parse_args()
 
-    if os.path.exists('./configs/' + args.config_id + '.yaml'):
+    if os.path.exists(args.config):
 
-        with open('./configs/' + args.config_id + '.yaml', 'r') as f:
+        with open(args.config, 'r') as f:
 
             yaml_arg = yaml.load(f, Loader=yaml.FullLoader)
             parser.set_defaults(**yaml_arg)
     else:
-        raise ValueError('Do NOT exist this config: {}'.format(args.config_id))
+        raise ValueError('Do NOT exist this config: {}'.format(args.config))
 
     # Update parameters by cmd
     args = parser.parse_args()
@@ -35,10 +37,10 @@ def main():
 
 
 def Init_parameters():
-    parser = argparse.ArgumentParser(description='kaggle-bengali')
+    parser = argparse.ArgumentParser(description='zalo-traffic')
 
     # Config
-    parser.add_argument('--config_id', '-c', type=str, default='')
+    parser.add_argument('--config', '-c', type=str, default='')
 
     return parser
 

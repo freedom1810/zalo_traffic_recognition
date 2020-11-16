@@ -12,13 +12,13 @@ from model.utils.LogReport import LogReport
 from model.utils.Metric import *
 
 from model.Predictor import Predictor
-from model.BengaliClassifier import BengaliClassifier
+from model.ZaloClassifier1292 import ZaloClassifier
 
-from dataset.BengaliAIDataset import BengaliAIDataset
+from dataset.ZaloAIDataset import ZaloAIDataset
 from dataset.Transform import Transform
 
 
-class Processor():
+class Processor(object):
 
     epoch = 0
 
@@ -42,11 +42,11 @@ class Processor():
         else:
             indices = None
 
-        train_dataset = BengaliAIDataset(path = args.train_path, 
+        train_dataset = ZaloAIDataset(path = args.train_path, 
                                         transform = train_transform,
                                         indices= indices)
 
-        valid_dataset = BengaliAIDataset(path = args.valid_path, 
+        valid_dataset = ZaloAIDataset(path = args.valid_path, 
                                         transform = valid_transform,
                                         indices = indices)
 
@@ -68,8 +68,9 @@ class Processor():
                                     num_workers = args.num_workers)
 
 
-        predictor = nn.DataParallel(Predictor())
-        self.classifier = BengaliClassifier(predictor, 
+        # predictor = nn.DataParallel(Predictor())
+        predictor = Predictor()
+        self.classifier = ZaloClassifier(predictor, 
                                         cutmix_ratio = args.cutmix_ratio, 
                                         cutmix_bien = args.cutmix_bien).to(self.device)
 
@@ -84,20 +85,12 @@ class Processor():
         self.train_preds = None
         self.train_gt = None
 
-        self.train_metrics = {'loss' : 0.0, 
-                            'loss_grapheme' : 0.0, 
-                            'loss_vowel' : 0.0,
-                            'loss_consonant' : 0.0
-                }
+        self.train_metrics = {'loss' : 0.0 }
 
         self.eval_preds = None
         self.eval_gt = None
 
-        self.eval_metrics = {'loss' : 0.0, 
-                            'loss_grapheme' : 0.0, 
-                            'loss_vowel' : 0.0,
-                            'loss_consonant' : 0.0
-                }
+        self.eval_metrics = {'loss' : 0.0 }
 
     def load_checkpoint(self):
 
@@ -201,10 +194,10 @@ class Processor():
                 self.train_metrics[key] /= self.num_train
                 self.eval_metrics[key] /= self.num_valid
 
-            train_score = macro_recall(self.train_preds, self.train_gt)
+            train_score = accuracy(self.train_preds, self.train_gt)
             self.train_metrics.update(train_score)
 
-            eval_score = macro_recall(self.eval_preds, self.eval_gt)
+            eval_score = accuracy(self.eval_preds, self.eval_gt)
             self.eval_metrics.update(eval_score)
 
             self.log_report.update(epoch = self.epoch, 

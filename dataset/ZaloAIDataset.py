@@ -5,7 +5,7 @@ import numpy as np
 import six
 import pandas as pd
 
-class BengaliAIDataset(Dataset):
+class ZaloAIDataset(Dataset):
     def __init__(self, 
                     path = '', 
                     transform=None, 
@@ -14,7 +14,6 @@ class BengaliAIDataset(Dataset):
                     ):
         
         self.path = path
-
 
         self.load_data()
         
@@ -70,31 +69,8 @@ class BengaliAIDataset(Dataset):
     def load_data(self):
         #train
         df = pd.read_csv(self.path)
-        self.labels = df[['grapheme_root', 'vowel_diacritic', 'consonant_diacritic']].values
+        self.labels = df['label'].values
         images = []
-        images = df['image_id'].values
+        images = df['image_file_name'].values
 
         self.images = np.array(images)
-
-    @staticmethod
-    def load_data_1295(train_path = '/home/asilla/sonnh/k/data/train_split.csv'):
-
-        #train
-        train = pd.read_csv(train_path)
-        train_labels = train[['grapheme_root', 'vowel_diacritic', 'consonant_diacritic']].values
-        
-        train_images = train['image_id'].values
-        train_paths = train['image_id'].values
-
-        labels = set()
-        for i, path in enumerate(train_paths):
-            labels.add(str(train_labels[i][0]) + '_' + str(train_labels[i][1]) + '_' + str(train_labels[i][2]))
-
-        labels = list(labels)
-        final_train_labels = []
-        for i, path in enumerate(train_paths):
-            label = str(train_labels[i][0]) + '_' + str(train_labels[i][1]) + '_' + str(train_labels[i][2])
-
-            final_train_labels.append(labels.index(label))
-
-        return train_images, np.array(final_train_labels)

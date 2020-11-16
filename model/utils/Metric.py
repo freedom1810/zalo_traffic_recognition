@@ -2,6 +2,22 @@ import numpy as np
 import sklearn.metrics
 import torch
 
+from sklearn.metrics import accuracy_score
+# y_pred = [0, 2, 1, 3]
+# y_true = [0, 1, 2, 3]
+
+def accuracy(pred_y, y):
+    y = y.cpu().numpy()
+    pred_y = [torch.argmax(py).cpu().numpy() for py in pred_y]
+    # pred_y = pred_y.detach().cpu().numpy()
+
+
+    # print(y)
+    # print(pred_y)
+    acc = accuracy_score(y, pred_y)
+    final_score = {'acc' : acc}
+
+    return final_score
 
 def macro_recall(pred_y, y, n_grapheme=168, n_vowel=11, n_consonant=7):
     pred_y = torch.split(pred_y, [n_grapheme, n_vowel, n_consonant], dim=1)

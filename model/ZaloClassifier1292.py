@@ -6,25 +6,16 @@ import torch.nn.functional as F
 
 
 
-class BengaliClassifier1295(nn.Module):
+class ZaloClassifier(nn.Module):
     def __init__(self, 
                     predictor, 
-                    n_grapheme=168, 
-                    n_vowel=11, 
-                    n_consonant=7, 
                     cutmix_ratio=0, 
                     cutmix_bien=0):
 
-        super(BengaliClassifier1295, self).__init__()
-
-        self.n_grapheme = n_grapheme
-        self.n_vowel = n_vowel
-        self.n_consonant = n_consonant
-        self.n_total_class = self.n_grapheme + self.n_vowel + self.n_consonant
+        super(ZaloClassifier, self).__init__()
 
         self.predictor = predictor
 
-        self.metrics_keys = ['loss', 'acc']
 
     def forward(self, x, y=None):
 
@@ -32,8 +23,7 @@ class BengaliClassifier1295(nn.Module):
 
         loss =  F.cross_entropy(preds, y)
         metrics = {
-            'loss': loss.item(),
-            'acc': accuracy(preds, y),
+            'loss': loss.item()
         }
 
         return loss, metrics, preds
@@ -44,8 +34,7 @@ class BengaliClassifier1295(nn.Module):
 
         loss =  F.cross_entropy(preds, y)
         metrics = {
-            'loss': loss.item(),
-            'acc': accuracy(preds, y),
+            'loss': loss.item()
         }
 
         return loss, metrics, preds
